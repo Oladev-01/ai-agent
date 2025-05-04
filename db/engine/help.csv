@@ -1,0 +1,72 @@
+phrase,category
+"talk to human",direct_request
+"speak to agent",direct_request
+"connect to representative",direct_request
+"need human",direct_request
+"need real person",direct_request
+"transfer to human",direct_request
+"connect me with a person",direct_request
+"let me talk to a person",direct_request
+"pass me to agent",direct_request
+"human support please",direct_request
+"can I speak to a human",direct_request
+"need customer service",direct_request
+"need to talk to someone",direct_request
+"want real assistant",direct_request
+"speak with supervisor",direct_request
+"connect to human agent",direct_request
+"switch to human operator",direct_request
+"prefer human assistance",direct_request
+"human representative needed",direct_request
+"transfer me to a real person",direct_request
+"this isn't working",frustration
+"you don't understand",frustration
+"not helpful",frustration
+"wrong answer",frustration
+"you're confused",frustration
+"this is frustrating",frustration
+"not what I asked",frustration
+"you keep misunderstanding",frustration
+"going in circles",frustration
+"waste of time",frustration
+"you're not getting it",frustration
+"this is useless",frustration
+"stop giving wrong info",frustration
+"this is ridiculous",frustration
+"you're not listening",frustration
+"completely wrong",frustration
+"this is so frustrating",frustration
+"you don't get it",frustration
+"not solving my problem",frustration
+"complicated issue",complexity
+"specific account question",complexity
+"billing dispute",complexity
+"need specialized help",complexity
+"complex situation",complexity
+"unique circumstances",complexity
+"technical problem",complexity
+"unusual request",complexity
+"account-specific question",complexity
+"special case",complexity
+"complicated scenario",complexity
+"non-standard issue",complexity
+"custom solution needed",complexity
+"need expert advice",complexity
+"advanced technical issue",complexity
+"requires manager approval",complexity
+"unusual account situation",complexity
+"emergency situation",urgency
+"urgent help needed",urgency
+"immediate assistance",urgency
+"time-sensitive issue",urgency
+"need help right now",urgency
+"critical problem",urgency
+"urgent matter",urgency
+"can't wait any longer",urgency
+"emergency support",urgency
+"pressing issue",urgency
+"need immediate help",urgency
+"critical situation",urgency
+"time is of the essence",urgency
+"need resolution today",urgency
+"cannot wait for automated help",urgency

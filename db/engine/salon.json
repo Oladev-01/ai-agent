@@ -1,0 +1,88 @@
+{
+    "id": "salon_001",
+    "name": "Tress & Tones Beauty Bar",
+    "description": "A premier beauty salon specializing in contemporary hair styling and color services.",
+    "address": {
+      "street": "123 Main Street",
+      "city": "Lagos",
+      "state": "Lagos State",
+      "zip": "100001",
+      "country": "Nigeria"
+    },
+    "contact": {
+      "phone": "+2348012345678",
+      "email": "info@tressandtones.ng",
+      "website": "https://tressandtones.ng"
+    },
+    "hours": {
+      "monday": "Closed",
+      "tuesday": "10:00 AM - 7:00 PM",
+      "wednesday": "10:00 AM - 7:00 PM",
+      "thursday": "10:00 AM - 7:00 PM",
+      "friday": "10:00 AM - 7:00 PM",
+      "saturday": "10:00 AM - 7:00 PM",
+      "sunday": "Closed"
+    },
+    "services": [
+      {
+        "name": "Haircut",
+        "description": "Precision cuts for all hair types.",
+        "price_naira": 50,
+        "duration_minutes": 45
+      },
+      {
+        "name": "Hair Coloring",
+        "description": "Full color, highlights, balayage, and ombre.",
+        "price_naira": 20000,
+        "duration_minutes": 120
+      },
+      {
+        "name": "Blow-Dry & Styling",
+        "description": "Professional blow-dry and style for any occasion.",
+        "price_naira": 7000,
+        "duration_minutes": 60
+      },
+      {
+        "name": "Keratin Treatment",
+        "description": "Smoothing treatment to reduce frizz and add shine.",
+        "price_naira": 25000,
+        "duration_minutes": 180
+      }
+    ],
+    "team": [
+      {
+        "name": "Adaeze Obi",
+        "role": "Senior Stylist",
+        "specialties": [
+          "Balayage",
+          "Color Correction"
+        ]
+      },
+      {
+        "name": "Chinedu Okeke",
+        "role": "Junior Stylist",
+        "specialties": [
+          "Haircuts",
+          "Blowouts"
+        ]
+      },
+      {
+        "name": "Fatima Yusuf",
+        "role": "Salon Manager",
+        "specialties": [
+          "Customer Service",
+          "Appointment Coordination"
+        ]
+      }
+    ],
+    "policies": {
+      "cancellation": "Please cancel at least 24 hours in advance to avoid a 50% service fee.",
+      "late_arrival": "Arrivals more than 15 minutes late may need to reschedule based on availability.",
+      "children": "Children under 12 must be accompanied by an adult at all times."
+    },
+    "social_media": {
+      "instagram": "https://instagram.com/tressandtones",
+      "facebook": "https://facebook.com/tressandtones",
+      "twitter": "https://twitter.com/tressandtones"
+    }
+  }
