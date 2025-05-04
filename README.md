@@ -40,17 +40,23 @@ This project implements an AI-powered assistant for Veluxe Beauty Lounge. The as
     pip install -r requirements.txt
 ```
 
-4. Set up the .env file:
+4. Set up the `.env` file:
+   - Add any required environment variables for LiveKit, database, or other integrations.
 
-5. Add any required environment variables for LiveKit, database, or other integrations.
-Ensure the help.csv file is in the project directory. This file contains phrases to determine if a query needs human intervention.
-*KEYS* to set up:
+5. Ensure the `help.csv` file is in the project directory. This file contains phrases to determine if a query needs human intervention.
+
+6. **Set up Firebase credentials**:
+   - Place your Firebase credentials file in the `db/engine/` directory and name it `firebase.json`.
+
+7. Add the following keys to your `.env` file:
 ```bash
-    *-* GROQ_API_KEY
-    *-* LIVEKIT_URL
-    *-* LIVEKIT_API_KEY
-    *-* LIVEKIT_API_SECRET
+    GROQ_API_KEY
+    LIVEKIT_URL
+    LIVEKIT_API_KEY
+    LIVEKIT_API_SECRET
 ```
+
+---
 
 ## Running the Application
 To start the AI assistant, run the following command:
