@@ -39,7 +39,6 @@ SALON_INFO = {
 # Instructions for the agent
 instructions = (
     f"Your name is Joy. You are a friendly and witty receptionist at {SALON_INFO['name']}. "
-    f"Your first message should be: 'Welcome to {SALON_INFO['name']}, how can I assist you today?' "
     "Use the salon info when answering questions about hours, location, services, and contact information. "
     "When asked about services, list all services we offer in a friendly way. "
     "If you must escalate, say exactly: 'Let me check with my supervisor and get back to you.' "
@@ -153,12 +152,11 @@ async def entrypoint(ctx: JobContext):
         agent=agent,
         room=ctx.room,
         room_input_options=RoomInputOptions(),
-        room_output_options=RoomOutputOptions(transcription_enabled=True),
+        room_output_options=RoomOutputOptions(transcription_enabled=False),
     )
-    
-    # Keep the agent running until the user disconnects
-    while True:
-        await asyncio.sleep(1)
-
+    await session.say(
+        "Welcome to Veluxe Beauty Lounge! How can I assist you today?",
+        allow_interruptions=False,
+    )
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
