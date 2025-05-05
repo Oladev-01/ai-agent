@@ -36,11 +36,14 @@ SALON_INFO = {
     "services": ["hair styling", "manicure & pedicure", "facials", "makeup artistry"],
 }
 
-#
+# Instructions for the agent
 instructions = (
     f"Your name is Joy. You are a friendly and witty receptionist at {SALON_INFO['name']}. "
-    "Use the salon info when answering. If you must escalate, say exactly: "
-    "Let me check with my supervisor and get back to you."
+    f"Your first message should be: 'Welcome to {SALON_INFO['name']}, how can I assist you today?' "
+    "Use the salon info when answering questions about hours, location, services, and contact information. "
+    "When asked about services, list all services we offer in a friendly way. "
+    "If you must escalate, say exactly: 'Let me check with my supervisor and get back to you.' "
+    "IMPORTANT: Never show function calls in your responses. Always speak naturally as a salon receptionist."
 )
 
 async def monitor_disconnects(room_name: str, call_record: CallHistory, interval: float = 2.0):
@@ -68,11 +71,13 @@ async def monitor_disconnects(room_name: str, call_record: CallHistory, interval
 class SalonAgent(Agent):
     def __init__(self):
         super().__init__(instructions=instructions)
-
-    @function_tool(name="handle_query", description="Process a customer question")
-    async def handle_query(self, context: RunContext, query: str) -> Optional[str]:
-        """Tool: decide if we need human intervention, else answer or escalate."""
-
+        
+    @function_tool(
+        name="process_query",
+        description="Process a customer question and provide a response."
+    )
+    async def process_query(self, context: RunContext, query: str) -> str:
+        """Process a customer question."""
         call_record = context.userdata['call_record']
         phone = call_record.customer_phone
         call_id = call_record.id
@@ -93,10 +98,9 @@ class SalonAgent(Agent):
         if "phone" in q or "contact" in q:
             return f"You can reach us at {SALON_INFO['phone']}."
         if "services" in q or "offer" in q:
-            for svc in SALON_INFO["services"]:
-                if svc in q:
-                    return f"Yes, we offer {svc} at {SALON_INFO['name']}."
-
+            services_list = ", ".join(SALON_INFO["services"])
+            return f"At {SALON_INFO['name']}, we offer {services_list}."
+            
         # unknown → general escalation
         req = Request.create(customer_phone=phone, query=query, call_id=call_id, category="general")
         logger.info(f"Pending request created: {req.id}")
@@ -105,40 +109,40 @@ class SalonAgent(Agent):
 async def entrypoint(ctx: JobContext):
     await ctx.connect()
     logger.info(f"Connected to room: {ctx.room.name}")
-    instructions = "Greet every guest with “Welcome to Veluxe Beauty Lounge, how can I assist you today?”"
-    # this is not too related but just to see and list participants
-    # and their sid
+    
+    # List participants in the room
     async with api.LiveKitAPI() as lkapi:
-        # List participants in the room
         res = await lkapi.room.list_participants(ListParticipantsRequest(
             room=ctx.room.name
         ))
         print(f"Participants in room: {[p.identity for p in res.participants]}")
         print(f"this is their sid: {[p.sid for p in res.participants]}")
     
-    # Simulate extracting caller info
+    # Simulate extracting caller info 
     customer_phone = "+2348001234567"
     call_record = CallHistory.create(customer_phone=customer_phone)
-    call_id = call_record.id  # i could also store the unique id as the sid of the current participant
+    call_id = call_record.id
     logger.info(f"Call started: {call_id}")
 
     # Start disconnect monitor
     asyncio.create_task(monitor_disconnects(ctx.room.name, call_record))
 
     agent = SalonAgent()
+    
+    # Custom STT node to log user speech
     async def custom_stt_node(self, audio, settings):
         async for ev in Agent.default.stt_node(self, audio, settings):
             if isinstance(ev, SpeechEvent) and getattr(ev, "alternatives", None):
                 txt = ev.alternatives[0].text
                 if txt:
-                    logger.info(f"User said: {txt}") # this should log the caller queries
+                    logger.info(f"User said: {txt}")
             yield ev
     agent.stt_node = custom_stt_node.__get__(agent, Agent)
 
     # Building session
     session = AgentSession(
         vad=silero.VAD.load(),
-        stt=groq.STT(model="whisper-large-v3-turbo"), # this is default model, can leave it out or use a different model
+        stt=groq.STT(model="whisper-large-v3-turbo"),
         llm=groq.LLM(),
         tts=groq.TTS(model="playai-tts"),
         userdata={"call_record": call_record},
@@ -149,9 +153,12 @@ async def entrypoint(ctx: JobContext):
         agent=agent,
         room=ctx.room,
         room_input_options=RoomInputOptions(),
-        room_output_options=RoomOutputOptions(transcription_enabled=True), # can be set to false if we don't want transcriptions
+        room_output_options=RoomOutputOptions(transcription_enabled=True),
     )
+    
+    # Keep the agent running until the user disconnects
+    while True:
+        await asyncio.sleep(1)
 
-    session.generate_reply()
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
