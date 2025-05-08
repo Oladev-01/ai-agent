@@ -13,6 +13,9 @@ from livekit.agents import (
     RunContext,
     RoomInputOptions,
     RoomOutputOptions,
+    AudioConfig,
+    BackgroundAudioPlayer,
+    BuiltinAudioClip,
     WorkerOptions,
     cli,
 )
@@ -143,9 +146,13 @@ async def entrypoint(ctx: JobContext):
         vad=silero.VAD.load(),
         stt=groq.STT(model="whisper-large-v3-turbo"),
         llm=groq.LLM(),
-        tts=groq.TTS(model="playai-tts"),
+        tts=groq.TTS(
+            model="playai-tts",
+            voice="Arista-PlayAI"),
         userdata={"call_record": call_record},
     )
+    current_speech = AgentSession.current_speech
+    print(f"Current speech: {current_speech}")
 
     # Start the conversation
     await session.start(
@@ -154,9 +161,19 @@ async def entrypoint(ctx: JobContext):
         room_input_options=RoomInputOptions(),
         room_output_options=RoomOutputOptions(transcription_enabled=False),
     )
-    await session.say(
-        "Welcome to Veluxe Beauty Lounge! How can I assist you today?",
-        allow_interruptions=False,
+    background_audio = BackgroundAudioPlayer(
+    # play office ambience sound looping in the background
+    ambient_sound=AudioConfig(BuiltinAudioClip.OFFICE_AMBIENCE, volume=0.8),
+    # play keyboard typing sound when the agent is thinking
+    thinking_sound=[
+        AudioConfig(BuiltinAudioClip.KEYBOARD_TYPING, volume=0.8),
+        AudioConfig(BuiltinAudioClip.KEYBOARD_TYPING2, volume=0.7),
+    ],
     )
+    await background_audio.start(room=ctx.room, agent_session=session)
+
+    session.say('Welcome to Veluxe Beauty Lounge, How can I assist you today?',
+                allow_interruptions=False)
+
 if __name__ == "__main__":
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
