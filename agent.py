@@ -79,7 +79,14 @@ class SalonAgent(Agent):
         description="Process a customer question and provide a response."
     )
     async def process_query(self, context: RunContext, query: str) -> str:
-        """Process a customer question."""
+        """Processes a customer question and returns a response.
+        Args:
+            context (RunContext): The context object containing session or environment data.
+            query (str): The user's question to be processed.
+
+        Returns:
+            str: The generated response to the user's question.
+        """
         call_record = context.userdata['call_record']
         phone = call_record.customer_phone
         call_id = call_record.id
